@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Entity\Event;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 final class ValidateController extends AbstractController
 {
@@ -22,8 +23,12 @@ final class ValidateController extends AbstractController
     }
 
     #[Route('/validate/{id}', name: 'app_validate_event', methods: ['POST'])]
-    public function validate(Event $event, EntityManagerInterface $em): Response {
-        
+    public function validate(Event $event, EntityManagerInterface $em, Request $request): Response
+    {
+        if (!$this->isCsrfTokenValid('validate' . $event->getId(), $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException();
+        }
+
         $event->setValide(true);
         $em->flush();
 
