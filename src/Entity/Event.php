@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\EventRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -34,6 +36,19 @@ class Event
 
     #[ORM\Column]
     private ?bool $valide = null;
+
+    /**
+     * @var Collection<int, User>
+     */
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'evenements')]
+    private Collection $inscrits;
+
+    public function __construct()
+    {
+        $this->inscrits = new ArrayCollection();
+        // set valide faux par defaut
+        $this->valide = false;
+    }
 
     public function getId(): ?int
     {
@@ -122,5 +137,40 @@ class Event
         $this->valide = $valide;
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getInscrits(): Collection
+    {
+        return $this->inscrits;
+    }
+
+    public function addInscrit(User $inscrit): static
+    {
+        if (!$this->inscrits->contains($inscrit)) {
+            $this->inscrits->add($inscrit);
+        }
+
+        return $this;
+    }
+
+    public function removeInscrit(User $inscrit): static
+    {
+        $this->inscrits->removeElement($inscrit);
+
+        return $this;
+    }
+
+    //gestion du nombre de places
+    public function getPlacesRestantes(): int
+    {
+        return $this->places - count($this->inscrits);
+    }
+
+    public function isComplet(): bool
+    {
+        return count($this->inscrits) >= $this->places;
     }
 }
