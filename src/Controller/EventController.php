@@ -56,7 +56,7 @@ final class EventController extends AbstractController
     #[IsGranted('ROLE_USER')]
     public function register(Event $event, Request $request, EntityManagerInterface $em): Response
     {
-        if (!$this->isCsrfTokenValid('validate' . $event->getId(), $request->request->get('_token'))) {
+        if (!$this->isCsrfTokenValid('register' . $event->getId(), $request->request->get('_token'))) {
             throw $this->createAccessDeniedException();
         }
         if ($event->isComplet()) {
@@ -69,5 +69,17 @@ final class EventController extends AbstractController
         return $this->redirectToRoute('app_event_show', ['id' => $event->getId()]);
     }
 
+    #[Route('/evenement/{id}/desinscription', name: 'app_event_unregister', methods: ['POST'])]
+    #[IsGranted('ROLE_USER')]
+    public function unregister(Event $event, Request $request, EntityManagerInterface $em): Response
+    {
+        if (!$this->isCsrfTokenValid('unregister' . $event->getId(), $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException();
+        }
+        $event->removeInscrit($this->getUser());
+        $em->flush();
+        $this->addFlash('success', 'Vous êtes désinscrit de l\'événement avec succès.');
+        return $this->redirectToRoute('app_event_show', ['id' => $event->getId()]);
+    }
 
 }
