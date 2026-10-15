@@ -10,6 +10,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Validator\Constraints\File;
 
 class EventType extends AbstractType
 {
@@ -31,6 +32,7 @@ class EventType extends AbstractType
             ->add('image', FileType::class, [
                 'required' => false,
                 'mapped' => false,
+                'constraints' => [new File(maxSize: '2M', mimeTypes: ['image/jpeg', 'image/png', 'image/webp'])],
             ])
             ->add('save', SubmitType::class, [
                 'label' => 'Ajouter l\'événement',

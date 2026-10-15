@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 final class ValidateController extends AbstractController
 {
     #[Route('/validate', name: 'app_validate')]
+    #[IsGranted('ROLE_ADMIN')]
     public function index(EventRepository $eventRepository): Response
     {
         $events = $eventRepository->findBy(['valide' => false], ['date' => 'ASC']);
@@ -23,6 +24,7 @@ final class ValidateController extends AbstractController
     }
 
     #[Route('/validate/{id}', name: 'app_validate_event', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function validate(Event $event, EntityManagerInterface $em, Request $request): Response
     {
         if (!$this->isCsrfTokenValid('validate' . $event->getId(), $request->request->get('_token'))) {

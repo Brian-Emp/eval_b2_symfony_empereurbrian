@@ -37,6 +37,7 @@ class Event
 
     #[ORM\Column]
     //validator
+    #[Assert\NotNull]
     #[Assert\Positive]
     private ?int $places = null;
 
@@ -81,7 +82,7 @@ class Event
         return $this->date;
     }
 
-    public function setDate(\DateTime $date): static
+    public function setDate(?\DateTime $date): static
     {
         $this->date = $date;
 
@@ -117,7 +118,7 @@ class Event
         return $this->places;
     }
 
-    public function setPlaces(int $places): static
+    public function setPlaces(?int $places): static
     {
         $this->places = $places;
 
