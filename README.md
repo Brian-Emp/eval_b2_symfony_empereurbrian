@@ -152,6 +152,8 @@ php bin/console doctrine:migrations:migrate
 
 7. Ajouter la **création de compte** et la **connexion** : tout le monde peut créer un événement, seuls les connectés s'inscrivent.
 
+   Une fois connecté, les boutons « Connexion » et « Créer un compte » du menu sont remplacés par un bouton **Se déconnecter**.
+
 8. Sur la page de détail, un bouton « **S'inscrire** » permet de participer à l'événement. Le nombre de places disponibles diminue et l'utilisateur est ajouté à la liste des inscrits.
 
 9. Un utilisateur inscrit peut **se désinscrire** d'un événement.
@@ -159,6 +161,8 @@ php bin/console doctrine:migrations:migrate
 10. Afficher le **nombre de places restantes** et un badge « **Complet** » quand il n'y en a plus, l'inscription est alors bloquée.
 
 11. Seuls les admins (`ROLE_ADMIN`) accèdent à la page `/validate` : liste des événements « Non validé » avec un bouton **Valider**.
+
+    Le lien « Validation » du menu n'est **affiché qu'aux admins**.
 
 ---
 
@@ -173,3 +177,53 @@ php bin/console doctrine:migrations:migrate
   ```
 
 - Lister les routes : `php bin/console debug:router`
+
+---
+
+## `bin/console` manquant
+
+Les fichiers `bin/console` et `bin/phpunit` ont été ajoutés au dépôt le **15/10/2026**. Si votre fork date d'avant, ils vous manquent, et `composer install` ne les recrée pas. Récupérez-les avec **l'une** des méthodes suivantes.
+
+**Méthode 1 : synchroniser votre fork**
+
+Sur la page GitHub de votre fork, cliquez sur **Sync fork** puis **Update branch**, puis récupérez les changements en local :
+
+```bash
+git pull
+```
+
+**Méthode 2 : réinstaller la recette Symfony** (après `composer install`)
+
+```bash
+composer recipes:install symfony/console --force
+```
+
+**Méthode 3 : créer le fichier à la main**
+
+Créez le fichier `bin/console` avec ce contenu :
+
+```php
+#!/usr/bin/env php
+<?php
+
+use App\Kernel;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+
+if (!is_dir(dirname(__DIR__).'/vendor')) {
+    throw new LogicException('Dependencies are missing. Try running "composer install".');
+}
+
+if (!is_file(dirname(__DIR__).'/vendor/autoload_runtime.php')) {
+    throw new LogicException('Symfony Runtime is missing. Try running "composer require symfony/runtime".');
+}
+
+require_once dirname(__DIR__).'/vendor/autoload_runtime.php';
+
+return function (array $context) {
+    $kernel = new Kernel($context['APP_ENV'], (bool) $context['APP_DEBUG']);
+
+    return new Application($kernel);
+};
+```
+
+Lancez ensuite les commandes avec `php bin/console ...`. Avec les méthodes 2 et 3, `bin/phpunit` reste absent : utilisez `vendor/bin/phpunit` à la place.
