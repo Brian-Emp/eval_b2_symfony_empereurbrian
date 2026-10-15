@@ -36,16 +36,16 @@ Le design est **déjà fait** : toutes les pages existent en HTML/CSS statique. 
 Le rendu se fait sur **votre fork**. Avant la date limite, complétez ce bloc (remplacez les `...`) et commitez-le :
 
 ```text
-Nom       : ...
-Prénom    : ...
+Nom       : Empereur
+Prénom    : Brian
 
 Compte admin (ROLE_ADMIN)
-  Email        : ...
-  Mot de passe : ...
+  Email        : brian.empereur@exemple.com
+  Mot de passe : Pa$$w0rd
 
 Compte utilisateur
-  Email        : ...
-  Mot de passe : ...
+  Email        : bob.jones@exemple.com
+  Mot de passe : Pa$$w0rd
 ```
 
 Commitez aussi la **base SQLite** avec quelques événements, utilisateurs et inscriptions de test. Le dossier `var/` étant ignoré par Git, il faut forcer l'ajout :
