@@ -21,7 +21,6 @@ final class EventController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // 2. s'il y en a un : le déplacer + stocker son nom dans $event
             $imageFile = $form->get('image')->getData();
             if ($imageFile) {
                 $newFilename = uniqid() . '.' . $imageFile->guessExtension();
@@ -65,7 +64,6 @@ final class EventController extends AbstractController
         }
         $event->addInscrit($this->getUser());
         $em->flush();
-        $this->addFlash('success', 'Vous êtes inscrit à l\'événement avec succès.');
         return $this->redirectToRoute('app_event_show', ['id' => $event->getId()]);
     }
 

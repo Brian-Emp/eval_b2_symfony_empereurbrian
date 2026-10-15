@@ -32,11 +32,9 @@ class EventType extends AbstractType
             ->add('image', FileType::class, [
                 'required' => false,
                 'mapped' => false,
-                'constraints' => [new File(maxSize: '2M', mimeTypes: ['image/jpeg', 'image/png', 'image/webp'])],
             ])
             ->add('save', SubmitType::class, [
                 'label' => 'Ajouter l\'événement',
-                'attr' => ['class' => 'btn'],
                 ])
         ;
     }
