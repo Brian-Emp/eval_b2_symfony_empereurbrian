@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 class Event
@@ -17,18 +18,26 @@ class Event
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    //validator
+    #[Assert\NotBlank]
     private ?string $titre = null;
 
     #[ORM\Column]
+    //validator
+    #[Assert\NotBlank]
     private ?\DateTime $date = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    //validator
+    #[Assert\NotBlank]
     private ?string $informations = null;
 
     #[ORM\Column(length: 50)]
     private ?string $categorie = null;
 
     #[ORM\Column]
+    //validator
+    #[Assert\Positive]
     private ?int $places = null;
 
     #[ORM\Column(length: 255, nullable: true)]
